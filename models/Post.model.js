@@ -8,6 +8,7 @@ const postSchema = new Schema(
         image: String,
         id: {
             type: Schema.Types.ObjectId,
+            ref: "user"
         }
 
 })

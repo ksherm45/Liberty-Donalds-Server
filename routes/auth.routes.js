@@ -26,8 +26,7 @@ console.log(req.body);
 
  let salt = bcrypt.genSaltSync(10);
  let hash = bcrypt.hashSync(password, salt);
- console.log('heres the', salt, 'heres the hash', hash)
-UserModel.create({username, password })  // ALWAYS MAKE SURE THE DESTRUCTURED NAMES ALIGN. ADD EMAIL ABOVE AND HERE IF WANTED LATER
+UserModel.create({username, password: hash })  // ALWAYS MAKE SURE THE DESTRUCTURED NAMES ALIGN. ADD EMAIL ABOVE AND HERE IF WANTED LATER
   .then((user) => {
     user.passwordHash = "***";
     res.status(200).json(user);
@@ -51,10 +50,6 @@ UserModel.create({username, password })  // ALWAYS MAKE SURE THE DESTRUCTURED NA
 
 
 
-router.post("/signup", isLoggedOut, (req, res) => {
-  const { username, password } = req.body;
-  console.log(username,password)
-});
 
 //SERVER SIDE VALIDATION -- UNBLOCK AT THE END OF PRODUCTION
 
@@ -77,6 +72,7 @@ router.post("/signup", isLoggedOut, (req, res) => {
 
 router.post('/signin', (req, res) => {
   const {username, password} = req.body;
+  
  // -----SERVER SIDE VALIDATION ----------
     /*
     if ( !email || !password) {
@@ -97,6 +93,7 @@ router.post('/signin', (req, res) => {
   // Search the database for a user with the username submitted in the form
   UserModel.findOne({ username })
     .then((userData) => {
+      console.log("made it here" , userData)
     // If the user is found, send the message username is taken
     let doesItMatch = bcrypt.compareSync(password, userData.passwordHash)
     if (doesItMatch) {
@@ -104,23 +101,24 @@ router.post('/signin', (req, res) => {
       req.session.loggedInUser = userData;
       res.status(200).json(userData)
     }
-    //if the passwords do not match -->
-    else {
-      res.status(500).json({
-        error: "Passwords do not match",
-      })
-      return;
-    }
   })
-  //Throw an error if the user does not exist
-  .catch((err) => {
-    res.status(500).json({
-      error: 'Email does not exist',
-      message: err
-    })
-    return;
-  });
-});
+    //if the passwords do not match -->
+  //   else {
+  //     res.status(500).json({
+  //       error: "Passwords do not match",
+  //     })
+  //     return;
+  //   }
+  // });
+  // //Throw an error if the user does not exist
+  // .catch((err) => {
+  //   res.status(500).json({
+  //     error: 'Email does not exist',
+  //     message: err
+  //   })
+  //   return;
+   });
+ 
 // will handle all POST  requests to http:localhost:5005/api/logout
 router.post('/logout', (req, res) => {
   req.session.destroy();

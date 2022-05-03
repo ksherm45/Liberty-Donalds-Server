@@ -11,28 +11,47 @@ const express = require("express");
 
 const app = express();
 
+
+
 // ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
 require("./config")(app);
 // ---------------------------------------------------
 //      EXPRESS-SESSION CONFIG
 // ---------------------------------------------------
+const MONGO_URI = require("../LibertyDonaldsServer/utils/consts");
 
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 
-app.use(session({
-  secret: process.env.SECRET, //Ideally this will be in you env file
-  resave: false,
-  saveUninitialized: false, 
-  cookie: {
-    maxAge: 1000 * 24* 60 * 60 // your cookie will be cleared after these seconds
-  },
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI || "mongodb://localhost/LibertyDonalds",
-    // Time to Live for sessions in DB. After that time it will delete it!
-    ttl: 24* 60 * 60 // your session will be cleared after these seconds
+// app.use(session({
+//   secret: process.env.SECRET, //Ideally this will be in you env file
+//   resave: false,
+//   saveUninitialized: false, 
+//   cookie: {
+//     maxAge: 1000 * 24* 60 * 60 // your cookie will be cleared after these seconds
+//   },
+//   store: MongoStore.create({
+//     mongoUrl: process.env.MONGODB_URI || "mongodb://localhost/LibertyDonalds",
+//     // Time to Live for sessions in DB. After that time it will delete it!
+//     ttl: 24* 60 * 60 // your session will be cleared after these seconds
+//   })
+// }));
+
+app.use(
+  session({
+    secret: "NotMyAge",
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // is in milliseconds.  expiring in 1 day
+    },
+    store: new MongoStore({
+      mongoUrl: MONGO_URI,
+      ttl: 60 * 60 * 24, // is in seconds. expiring in 1 day
+    }),
   })
-}));
+);
+
 
 // ---------------------------------------------------
 //      EXPRESS-SESSION CONFIG
@@ -51,6 +70,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const authRoutes = require("./routes/auth.routes");
 app.use("/api", authRoutes);
+
+const postRoutes = require("./routes/post.routes");
+app.use("/api", postRoutes);
 
 app.use((req, res, next) => {
 	// If no routes match, send them the React HTML.
