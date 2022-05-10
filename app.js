@@ -18,10 +18,9 @@ require("./config")(app);
 // ---------------------------------------------------
 //      EXPRESS-SESSION CONFIG
 // ---------------------------------------------------
-const MONGO_URI = require("../LibertyDonaldsServer/utils/consts");
-
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
+const MONGO_URI = require("./utils/consts");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
 
 // app.use(session({
 //   secret: process.env.SECRET, //Ideally this will be in you env file
