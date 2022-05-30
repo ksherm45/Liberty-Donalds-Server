@@ -1,12 +1,10 @@
 const { Schema, model } = require("mongoose");
 
-const postSchema = new Schema(
+const postImagesSchema = new Schema(
   {
     name: String,
     description: String,
     image: String,
-    youtube: String,
-    audio: String,
     owner: {
       type: Schema.Types.ObjectId,
       ref: "user",
@@ -17,6 +15,6 @@ const postSchema = new Schema(
   }
 );
 
-const PostModel = model("Post", postSchema);
+const PostModelImages = model("PostImages", postSchema);
 
-module.exports = PostModel;
+module.exports = PostModelImages;

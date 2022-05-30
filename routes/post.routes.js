@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const PostModel = require("../models/Post.model");
+// include CLOUDINARY:
+const uploader = require("../config/cloudinary.config.js");
+
 
 //NOTE: All API routes will start from /api
 //Will hande all GET requests to http:localhost:5005/api/posts
@@ -34,6 +37,26 @@ router.post("/post", (req, res) => {
         message: err,
       });
     });
+});
+
+router.post("/uploadFile", uploader.single("image"), (req, res) => {
+  // const {name, description} = req.body;
+  console.log("here is the body", req.file.path);
+  let obj = {
+    name: req.body.name,
+    image: req.file.path,
+    post: req.body.description
+              }
+  // PostModelImages.create(req.file)
+  //   .then((response) => {
+  //     res.status(200).json(response);
+  //   })
+  //   .catch((err) => {
+  //     res.status(500).json({
+  //       error: "Something went wrong",
+  //       message: err,
+  //     });
+  //   });
 });
 
 router.get("/get-posts", (req, res) => {
