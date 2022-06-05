@@ -73,6 +73,9 @@ app.use("/api", authRoutes);
 const postRoutes = require("./routes/post.routes");
 app.use("/api", postRoutes);
 
+const imageRoutes = require("./routes/postimage.routes");
+app.use("/api", imageRoutes);
+
 app.use((req, res, next) => {
 	// If no routes match, send them the React HTML.
 	res.sendFile(__dirname + "/public/index.html");

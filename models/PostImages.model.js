@@ -15,6 +15,6 @@ const postImagesSchema = new Schema(
   }
 );
 
-const PostModelImages = model("PostImages", postSchema);
+const PostModelImages = model("PostImages", postImagesSchema);
 
 module.exports = PostModelImages;
