@@ -62,6 +62,21 @@ router.post("/uploadFile", uploader.single("image"), (req, res) => {
     });
 });
 
+router.get("/blahblah/:videoId", (req, res) => {
+  const {videoId} = req.params
+  PostModel.findById(videoId)
+  .then((response) => {
+    console.log("post response", response);
+    res.status(200).json(response);
+  })
+  .catch((err) => {
+    res.status(500).json({
+      error: "Something went wrong",
+      message: err,
+    });
+  });
+});
+
 router.get("/get-posts", (req, res) => {
   PostModel.find()
     .then((response) => {

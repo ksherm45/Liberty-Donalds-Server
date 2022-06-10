@@ -75,6 +75,22 @@ router.get("/get-images", (req, res) => {
     });
 });
 
+router.get("/blah/:audioId", (req, res) => {
+  const {audioId} = req.params
+  PostModelImages.findById(audioId)
+  .then((response) => {
+    console.log("post response", response);
+    res.status(200).json(response);
+  })
+  .catch((err) => {
+    res.status(500).json({
+      error: "Something went wrong",
+      message: err,
+    });
+  });
+});
+
+
 router.delete("/post/:id", (req, res) => {
   const id = req.params.id;
   console.log("made it to server");
